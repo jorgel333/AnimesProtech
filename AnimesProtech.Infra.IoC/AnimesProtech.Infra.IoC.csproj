@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AnimesProtech.Application\AnimesProtech.Application.csproj" />
+    <ProjectReference Include="..\AnimesProtech.Domain\AnimesProtech.Domain.csproj" />
+    <ProjectReference Include="..\AnimesProtech.Infra.Data\AnimesProtech.Infra.Data.csproj" />
+  </ItemGroup>
+
 </Project>
