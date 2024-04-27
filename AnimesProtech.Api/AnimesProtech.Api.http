@@ -1,0 +1,6 @@
+@AnimesProtech.Api_HostAddress = http://localhost:5099
+
+GET {{AnimesProtech.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
