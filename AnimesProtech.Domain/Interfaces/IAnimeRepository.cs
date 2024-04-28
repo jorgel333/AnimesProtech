@@ -4,7 +4,7 @@ namespace AnimesProtech.Domain.Interfaces;
 
 public interface IAnimeRepository
 {
-    IEnumerable<Anime> GetAllFilter(string? keyword, int? directorId);
+    Task<IEnumerable<Anime>> GetAllFilter(string? keywords, int? directorId, CancellationToken cancellationToken);
     void Update(Anime anime);
     void Create(Anime anime);
 }
