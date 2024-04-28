@@ -1,10 +1,10 @@
 ﻿using AnimesProtech.Domain.Interfaces;
+using AnimesProtech.Domain.Interfaces.Repositories;
 using AnimesProtech.Infra.Data.Context;
 using AnimesProtech.Infra.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace AnimesProtech.Infra.Data;
 
@@ -22,5 +22,11 @@ public static class DependencyInjection
         services.AddScoped<IAnimeRepository, AnimeRepository>();
         return services;
     }
+    public static IServiceCollection AddUnityuOfWork(this IServiceCollection services)
+    {
+        services.AddScoped<IUnityOfWork, UnityOfWork>();
+        return services;
+    }
+
 
 }
