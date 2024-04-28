@@ -1,3 +1,5 @@
+using AnimesProtech.Api.Configuration;
+
 namespace AnimesProtech.Api;
 
 public class Program
@@ -6,12 +8,10 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddApiConfiguration(builder.Configuration);
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwagger();
 
         var app = builder.Build();
 
