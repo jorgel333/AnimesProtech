@@ -11,6 +11,12 @@ public class Anime : Entity
     public int DirectorId { get; set; }
     public Director Director { get; set; }
 
+    public void Update(string name, string summary, int directorId)
+    {
+        Name = name;
+        Summary = summary;
+        DirectorId = directorId;
+    }
     public void Disable()
     {
         Active = false;
