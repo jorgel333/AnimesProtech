@@ -1,9 +1,10 @@
 ﻿using AnimesProtech.Api.ApiUntils.ResponseDapter;
 using AnimesProtech.Application.Features.Animes.Disable;
 using AnimesProtech.Application.Features.Animes.GetAllFilter;
+using AnimesProtech.Application.Features.Animes.GetById;
 using AnimesProtech.Application.Features.Animes.Update;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
 
 namespace AnimesProtech.Api.Controllers;
 
@@ -19,14 +20,36 @@ public class AnimesController(ISender sender) : ControllerBase
     /// <param name="name">Nome do anime</param>
     /// <param name="keyword">Palavra chave</param>
     /// <param name="directorId">Id do diretor</param>
+    /// <param name="page">Numero da página</param>
+    /// <param name="pageSize">Quantidade de registros por página</param>
+    /// <param name="isDescending">Tipo de ordenação por nome do anime</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">Success</response>
     /// <returns></returns>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpGet]
-    public async Task<IActionResult> GetAllFilter(string? name, string? keyword, int? directorId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAnimesFilter(int page, int pageSize, bool? isDescending,
+        string? name, string? keyword, int? directorId, CancellationToken cancellationToken)
     {
-        var request = new GetAllFilterAnimesQuery(name, keyword, directorId);
+        var request = new GetAllFilterAnimesQuery(page, pageSize, isDescending, name, keyword, directorId);
+        var response = await _sender.Send(request, cancellationToken);
+        return SendResponseService.SendResponse(response);
+    }
+
+    /// <summary>
+    /// Obtém um anime pelo seu Id.
+    /// </summary>
+    /// <param name="id">Id do anime</param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="200">Ok</response>
+    /// <response code="404">NotFound</response>
+    /// <returns></returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetAnimeById(int id, CancellationToken cancellationToken)
+    {
+        var request = new GetAnimeByIdQuery(id);
         var response = await _sender.Send(request, cancellationToken);
         return SendResponseService.SendResponse(response);
     }
@@ -48,6 +71,7 @@ public class AnimesController(ISender sender) : ControllerBase
         var response = await _sender.Send(request, cancellationToken);
         return SendResponseService.SendResponse(response);
     } 
+
     /// <summary>
     /// Atualiza os dados de um anime
     /// </summary>
