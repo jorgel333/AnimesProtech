@@ -3,8 +3,8 @@ using AnimesProtech.Application.Features.Animes.Disable;
 using AnimesProtech.Application.Features.Animes.GetAllFilter;
 using AnimesProtech.Application.Features.Animes.GetById;
 using AnimesProtech.Application.Features.Animes.Update;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
 
 namespace AnimesProtech.Api.Controllers;
 
@@ -20,14 +20,18 @@ public class AnimesController(ISender sender) : ControllerBase
     /// <param name="name">Nome do anime</param>
     /// <param name="keyword">Palavra chave</param>
     /// <param name="directorId">Id do diretor</param>
+    /// <param name="page">Numero da página</param>
+    /// <param name="pageSize">Quantidade de registros por página</param>
+    /// <param name="isDescending">Tipo de ordenação por nome do anime</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">Success</response>
     /// <returns></returns>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpGet]
-    public async Task<IActionResult> GetAllAnimesFilter(string? name, string? keyword, int? directorId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAnimesFilter(int page, int pageSize, bool? isDescending,
+        string? name, string? keyword, int? directorId, CancellationToken cancellationToken)
     {
-        var request = new GetAllFilterAnimesQuery(name, keyword, directorId);
+        var request = new GetAllFilterAnimesQuery(page, pageSize, isDescending, name, keyword, directorId);
         var response = await _sender.Send(request, cancellationToken);
         return SendResponseService.SendResponse(response);
     }
@@ -49,6 +53,7 @@ public class AnimesController(ISender sender) : ControllerBase
         var response = await _sender.Send(request, cancellationToken);
         return SendResponseService.SendResponse(response);
     }
+
     /// <summary>
     /// Desativa um anime buscando pelo seu id
     /// </summary>

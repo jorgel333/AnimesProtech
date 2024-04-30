@@ -1,7 +1,9 @@
 ﻿using AnimesProtech.Application.Extensions;
+using AnimesProtech.Domain;
 using AnimesProtech.Domain.Entities;
 using AnimesProtech.Domain.Interfaces.Repositories;
 using AnimesProtech.Infra.Data.Context;
+using AnimesProtech.Infra.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnimesProtech.Infra.Data.Repositories;
@@ -13,13 +15,12 @@ public class AnimeRepository(AppDbContext context) : IAnimeRepository
     public async Task<Anime?> GetById(int id, CancellationToken cancellationToken)
       => await _context.Animes.Include(x => x.Director).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-    public async Task<IEnumerable<Anime>> GetAllFilter(string? name, string? keyword, int? directorId, CancellationToken cancellationToken)
+    public Task<IEnumerable<Anime>> GetAllFilter(PaginasteQueryOptions paginasteQueryOptions, string? name, string? keyword, int? directorId, CancellationToken cancellationToken)
     {
         var filters = new List<Func<Anime, bool>>();
 
-        var animes = await _context.Animes
-                            .Include(x => x.Director)
-                            .ToArrayAsync(cancellationToken);
+        var animes =  _context.Animes
+                            .Include(x => x.Director).PaginateAndOrder(paginasteQueryOptions, x => x.Name);
 
         if (string.IsNullOrWhiteSpace(name) is false)
             filters.Add(x => x.Name!.StartsWith(name.Trim(), StringComparison.CurrentCultureIgnoreCase));
@@ -32,7 +33,7 @@ public class AnimeRepository(AppDbContext context) : IAnimeRepository
 
         var filterAnimes = filters.Aggregate(animes as IEnumerable<Anime>, (seed, filters) => seed.Where(filters));
 
-        return filterAnimes;
+        return Task.FromResult(filterAnimes);
     }
 
     public void Update(Anime anime)
