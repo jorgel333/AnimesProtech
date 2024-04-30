@@ -9,7 +9,8 @@ public class GetAllFilterAnimesQueryHandler(IAnimeRepository animeRepository) : 
     private readonly IAnimeRepository _animeRepository = animeRepository;
     public async Task<Result<IEnumerable<GetAllFilterAnimesQueryResponse>>> Handle(GetAllFilterAnimesQuery request, CancellationToken cancellationToken)
     {
-
+        if (request.Keyword != null)
+            _ = request.Keyword.Trim();
         var animes = await _animeRepository.GetAllFilter(request.Name, request.Keyword, request.DirectorId, cancellationToken);
 
         var response = animes.Select(x => new GetAllFilterAnimesQueryResponse(x.Name, x.Summary, x.Director.Name));
