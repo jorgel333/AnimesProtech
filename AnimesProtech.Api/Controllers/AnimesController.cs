@@ -1,6 +1,7 @@
 ﻿using AnimesProtech.Api.ApiUntils.ResponseDapter;
 using AnimesProtech.Application.Features.Animes.Disable;
 using AnimesProtech.Application.Features.Animes.GetAllFilter;
+using AnimesProtech.Application.Features.Animes.GetById;
 using AnimesProtech.Application.Features.Animes.Update;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -24,13 +25,30 @@ public class AnimesController(ISender sender) : ControllerBase
     /// <returns></returns>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpGet]
-    public async Task<IActionResult> GetAllFilter(string? name, string? keyword, int? directorId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAnimesFilter(string? name, string? keyword, int? directorId, CancellationToken cancellationToken)
     {
         var request = new GetAllFilterAnimesQuery(name, keyword, directorId);
         var response = await _sender.Send(request, cancellationToken);
         return SendResponseService.SendResponse(response);
     }
 
+    /// <summary>
+    /// Obtém um anime pelo seu Id.
+    /// </summary>
+    /// <param name="id">Id do anime</param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="200">Ok</response>
+    /// <response code="404">NotFound</response>
+    /// <returns></returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetAnimeById(int id, CancellationToken cancellationToken)
+    {
+        var request = new GetAnimeByIdQuery(id);
+        var response = await _sender.Send(request, cancellationToken);
+        return SendResponseService.SendResponse(response);
+    }
     /// <summary>
     /// Desativa um anime buscando pelo seu id
     /// </summary>
@@ -48,6 +66,7 @@ public class AnimesController(ISender sender) : ControllerBase
         var response = await _sender.Send(request, cancellationToken);
         return SendResponseService.SendResponse(response);
     } 
+
     /// <summary>
     /// Atualiza os dados de um anime
     /// </summary>

@@ -11,7 +11,7 @@ public class AnimeRepository(AppDbContext context) : IAnimeRepository
     private readonly AppDbContext _context = context;
 
     public async Task<Anime?> GetById(int id, CancellationToken cancellationToken)
-      => await _context.Animes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+      => await _context.Animes.Include(x => x.Director).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public async Task<IEnumerable<Anime>> GetAllFilter(string? name, string? keyword, int? directorId, CancellationToken cancellationToken)
     {
