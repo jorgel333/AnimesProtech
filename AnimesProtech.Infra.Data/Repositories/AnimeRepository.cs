@@ -21,11 +21,11 @@ public class AnimeRepository(AppDbContext context) : IAnimeRepository
                             .ToArrayAsync(cancellationToken);
 
         if (string.IsNullOrWhiteSpace(name) is false)
-            filters.Add(x => x.Summary!.StartsWith(name, StringComparison.CurrentCultureIgnoreCase));
+            filters.Add(x => x.Name!.StartsWith(name, StringComparison.CurrentCultureIgnoreCase));
         
        
         if (string.IsNullOrWhiteSpace(keyword) is false)
-            filters.Add(x => x.Summary!.Contains(keyword, StringComparison.CurrentCultureIgnoreCase));
+            filters.Add(x => x.Summary!.Contains(keyword.Trim(), StringComparison.CurrentCultureIgnoreCase));
 
         if (directorId is not null)
             filters.Add(m => m.DirectorId! == directorId);
